@@ -19,8 +19,8 @@
 //// as well as added functionality. Oh well!
 /**
  * Displays cryptocurrency price information from CoinGecko.
- * Modified from the featured "Crypto Price" widget.
- * Name: Cryptoprice
+ * Heavily modified from the featured "Crypto Price" widget.
+ * Name: Foxprice
  * Author: Ging
  * Year: 2022
 */
@@ -44,7 +44,7 @@ if (!env.widgetFamily) {
     if (common.determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
         // Update
         (await common.selfUpdate({
-            srcurl: 'https://github.com/ExperiBass/scriptable-scripts/raw/master/Cryptoprice.js',
+            srcurl: 'https://github.com/ExperiBass/scriptable-scripts/raw/master/Foxprice.js',
             filename: module.filename, fs: files, shouldPiggyback: true
         }))
     }

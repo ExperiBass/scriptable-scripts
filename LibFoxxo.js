@@ -5,10 +5,11 @@
  * Common methods shared by scripts from Ging.
  * Feel free to use in your own scripts :3
  * Author: Ging
+ * Name: LibFoxxo
  * Year: 2022
  * Donate: bc1qd65n4y562q6vdp5lx7953uqj0hqxn9k8rqx08y
 */
-const SRC_URL = 'https://github.com/ExperiBass/scriptable-scripts/raw/master/ging-common.js'
+const SRC_URL = 'https://github.com/ExperiBass/scriptable-scripts/raw/master/LibFoxxo.js'
 
 module.exports = {
     /**
