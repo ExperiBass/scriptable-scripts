@@ -133,7 +133,6 @@ module.exports = {
         borderWidth = 0, // px
         verticalLayout = false,
         padding = [0, 0, 0, 0], // array of 4 numbers
-        font = null,
         align = 'top' // 'top', 'center', 'bottom'
     }) {
         try {
@@ -154,9 +153,6 @@ module.exports = {
                 stacc.layoutVertically()
             } else {
                 stacc.layoutHorizontally()
-            }
-            if (font) {
-                stacc.font = font
             }
             stacc[`${align.toLowerCase()}AlignContent`]()
             stacc.setPadding(...padding)
@@ -200,21 +196,4 @@ module.exports = {
         return (+now - +date) / msInDay
     }
 }
-
-
-if (config.runsInApp) {
-    // Update if called
-    const files = module.exports.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
-    module.exports.selfUpdate({
-        filename: module.filename,
-        srcurl: SRC_URL,
-        fs: files,
-        shouldPiggyback: false, // Dont double-update x3
-        alertOptions: {
-            title: 'Woah, so fancy!',
-            message: `${module.filename} has sucessfully updated!`,
-            failMessage: `${module.filename} failed to update! The error is in the console.`
-        }
-    })
-    Script.complete()
-}
+Script.complete()
