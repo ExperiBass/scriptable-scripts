@@ -44,7 +44,7 @@ if (!env.widgetFamily) {
     if (common.determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
         // Update
         (await common.selfUpdate({
-            srcurl: 'https://gist.github.com/ExperiBass/919f9f2f9676d1e9c4a63860a71657a3/raw/31ee5cda2bdaf752cb528510a2f2c9f9c78b0d26/Cryptoprice.js',
+            srcurl: 'https://github.com/ExperiBass/scriptable-scripts/raw/master/Cryptoprice.js',
             filename: module.filename, fs: files, shouldPiggyback: true
         }))
     }

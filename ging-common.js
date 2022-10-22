@@ -8,7 +8,7 @@
  * Year: 2022
  * Donate: bc1qd65n4y562q6vdp5lx7953uqj0hqxn9k8rqx08y
 */
-const SRC_URL = 'https://gist.github.com/ExperiBass/0e619152121c309b850783a9bf5bb2e9/raw/5284534b294ce7de490d55fa6a270019aa7c4c28/ging-common.js'
+const SRC_URL = 'https://github.com/ExperiBass/scriptable-scripts/raw/master/ging-common.js'
 
 module.exports = {
     /**
