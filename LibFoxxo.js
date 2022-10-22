@@ -201,17 +201,20 @@ module.exports = {
     }
 }
 
-// Update if called
-const files = module.exports.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
-module.exports.selfUpdate({
-    filename: module.filename,
-    srcurl: SRC_URL,
-    fs: files,
-    shouldPiggyback: false, // Dont double-update x3
-    alertOptions: {
-        title: 'Woah, so fancy!',
-        message: `${module.filename} has sucessfully updated!`,
-        failMessage: `${module.filename} failed to update! The error is in the console.`
-    }
-})
-Script.complete()
+
+if (!config.widgetFamily) {
+    // Update if called
+    const files = module.exports.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
+    module.exports.selfUpdate({
+        filename: module.filename,
+        srcurl: SRC_URL,
+        fs: files,
+        shouldPiggyback: false, // Dont double-update x3
+        alertOptions: {
+            title: 'Woah, so fancy!',
+            message: `${module.filename} has sucessfully updated!`,
+            failMessage: `${module.filename} failed to update! The error is in the console.`
+        }
+    })
+    Script.complete()
+}

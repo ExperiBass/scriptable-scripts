@@ -31,14 +31,13 @@ const common = importModule('LibFoxxo')
 const FONT = Font.mediumSystemFont(16)
 
 const params = args.widgetParameter ? args.widgetParameter.split(',') : ['bitcoin', 'ethereum']
-const env = config
 
 // Select file source
 const files = common.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
 const bgPath = common.getFile(files, '/rice/topleft.jpg')
 
 // Self-update
-if (!env.widgetFamily) {
+if (!config.widgetFamily) {
     // check file update date
     const UPDATE_PERIOD = 30 // days
     const lastUpdated = files.modificationDate(module.filename)
@@ -79,7 +78,7 @@ async function addCryptoLine(name) {
         align: 'center', verticalLayout: false
     })
 
-    if (env.widgetFamily && env.widgetFamily !== "small") {
+    if (config.widgetFamily && config.widgetFamily !== "small") {
         rowStack.url = `https://www.coingecko.com/en/coins/${id}`
         const imageStack = common.createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
         common.createImage({
@@ -103,7 +102,7 @@ async function addCryptoLine(name) {
 
     symbolText.textColor = new Color('#FFFFFF')
 
-    if (env.widgetFamily && env.widgetFamily !== "small") {
+    if (config.widgetFamily && config.widgetFamily !== "small") {
         const percentStack = common.createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
         const percentText = percentStack.addText(growPercent)
         if (grow) {
