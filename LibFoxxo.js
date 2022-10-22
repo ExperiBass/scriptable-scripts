@@ -202,7 +202,7 @@ module.exports = {
 }
 
 
-if (!config.widgetFamily) {
+if (config.runsInApp) {
     // Update if called
     const files = module.exports.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
     module.exports.selfUpdate({

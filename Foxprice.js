@@ -37,7 +37,7 @@ const files = common.isIniCloud(FileManager.local(), module.filename) ? FileMana
 const bgPath = common.getFile(files, '/rice/topleft.jpg')
 
 // Self-update
-if (!config.widgetFamily) {
+if (config.runsInApp) {
     // check file update date
     const UPDATE_PERIOD = 30 // days
     const lastUpdated = files.modificationDate(module.filename)
@@ -78,7 +78,7 @@ async function addCryptoLine(name) {
         align: 'center', verticalLayout: false
     })
 
-    if (config.widgetFamily && config.widgetFamily !== "small") {
+    if (config.runsInWidget && config.widgetFamily !== "small") {
         rowStack.url = `https://www.coingecko.com/en/coins/${id}`
         const imageStack = common.createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
         common.createImage({
@@ -102,7 +102,7 @@ async function addCryptoLine(name) {
 
     symbolText.textColor = new Color('#FFFFFF')
 
-    if (config.widgetFamily && config.widgetFamily !== "small") {
+    if (config.runsInWidget && config.widgetFamily !== "small") {
         const percentStack = common.createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
         const percentText = percentStack.addText(growPercent)
         if (grow) {
