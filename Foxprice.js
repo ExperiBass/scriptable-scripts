@@ -13,10 +13,11 @@
 // AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
 //// I dont know if i need this notice, as i've rewritten most of the code to bring it up to date,
 //// as well as added functionality. Oh well!
+//////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Displays cryptocurrency price information from CoinGecko.
  * Heavily modified from the featured "Crypto Price" widget.
@@ -26,7 +27,7 @@
 */
 const PRESENT_SIZE = "Small"
 // Widget setup
-const common = importModule('ging-common')
+const common = importModule('LibFoxxo')
 const FONT = Font.mediumSystemFont(16)
 
 const params = args.widgetParameter ? args.widgetParameter.split(',') : ['bitcoin', 'ethereum']

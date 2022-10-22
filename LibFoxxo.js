@@ -214,3 +214,4 @@ module.exports.selfUpdate({
         failMessage: `${module.filename} failed to update! The error is in the console.`
     }
 })
+Script.complete()
