@@ -27,10 +27,10 @@
 const PRESENT_SIZE = "Small"
 // Widget setup
 const common = importModule('ging-common')
+const FONT = Font.mediumSystemFont(16)
 
 const params = args.widgetParameter ? args.widgetParameter.split(',') : ['bitcoin', 'ethereum']
 const env = config
-
 
 // Select file source
 const files = common.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
@@ -94,10 +94,10 @@ async function addCryptoLine(name) {
 
     // The text
     const symbolText = symbolStack.addText(symbol)
-    symbolText.font = Font.mediumSystemFont(16)
+    symbolText.font = FONT
     symbolText.leftAlignText()
     const priceText = priceStack.addText(price)
-    priceText.font = Font.mediumSystemFont(16)
+    priceText.font = FONT
     priceText.rightAlignText()
 
     symbolText.textColor = new Color('#FFFFFF')

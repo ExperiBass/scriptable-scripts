@@ -200,8 +200,8 @@ module.exports = {
     }
 }
 
-const files = module.exports.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
 // Update if called
+const files = module.exports.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
 module.exports.selfUpdate({
     filename: module.filename,
     srcurl: SRC_URL,
