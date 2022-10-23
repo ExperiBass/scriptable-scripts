@@ -15,7 +15,7 @@ const params = args.widgetParameter ? args.widgetParameter.split(',') : []
 
 // Select file source
 const files = common.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
-const bgPath = common.getFile(files, '/rice/topright.jpg')
+const bgPath = common.getFile(files, '/rice/centerright.jpg')
 
 // Self-update
 if (config.runsInApp) {
