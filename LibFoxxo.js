@@ -1,6 +1,6 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
-// icon-color: dark-gray; icon-glyph: book;
+// icon-color: deep-gray; icon-glyph: book;
 /**
  * Common methods shared by scripts from Ging.
  * Feel free to use in your own scripts :3
