@@ -41,9 +41,9 @@ const widgetConf = {
         width: 1
     },
     font: {
-        large: Font.systemFont(64),
-        medium: Font.systemFont(32),
-        small: Font.systemFont(16)
+        large: Font.mediumSystemFont(64),
+        medium: Font.mediumSystemFont(32),
+        small: Font.mediumSystemFont(16)
     },
     iconStackHeight: 0,
     iconDims: 20
