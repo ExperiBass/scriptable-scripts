@@ -48,7 +48,7 @@ module.exports = {
             alert.presentAlert()
             return true
         } catch (e) {
-            console.error(`[ging-common][selfUpdate]: ${e}`)
+            console.error(`[LibFoxxo][selfUpdate]: ${e}`)
             const alert = await module.exports.createAlert(alertOptions.title, alertOptions.failMessage, {
                 actions: [{
                     type: 'default',
@@ -159,7 +159,7 @@ module.exports = {
 
             return stacc
         } catch (e) {
-            throw Error(`[ging-common][createStack]: ${e}`)
+            throw Error(`[LibFoxxo][createStack]: ${e}`)
         }
     },
     createImage({
@@ -184,7 +184,35 @@ module.exports = {
             img[`${align.toLowerCase()}AlignImage`]()
             return img
         } catch (e) {
-            throw Error(`[ging-common][createImage]: ${e}`)
+            throw Error(`[LibFoxxo][createImage]: ${e}`)
+        }
+    },
+    createText({
+        parent = null,
+        content = "",
+        font = null,
+        maxLines = 0,
+        minimumScaleFactor = 1,
+        url = null,
+        align = 'left' // 'left', 'center', 'right'
+    }) {
+        try {
+            if (!parent) {
+                throw Error('parent not defined')
+            }
+            const txt = parent.addText(content)
+            txt.lineLimit = maxLines
+            if (font) {
+                txt.font = font
+            }
+            txt.minimumScaleFactor = minimumScaleFactor
+            if (url) {
+                txt.url = url
+            }
+            txt[`${align.toLowerCase()}AlignText`]()
+            return txt
+        } catch (e) {
+            throw Error(`[LibFoxxo][createText]: ${e}`)
         }
     },
     determineDaysFromNow(date) {
