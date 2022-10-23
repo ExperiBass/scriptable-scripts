@@ -39,7 +39,7 @@ const bgPath = common.getFile(files, '/rice/topleft.jpg')
 // Self-update
 if (config.runsInApp) {
     // check file update date
-    const UPDATE_PERIOD = 30 // days
+    const UPDATE_PERIOD = 7 // days
     const lastUpdated = files.modificationDate(module.filename)
     if (common.determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
         // Update
