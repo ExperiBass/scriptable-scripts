@@ -11,6 +11,54 @@
 */
 const SRC_URL = 'https://github.com/ExperiBass/scriptable-scripts/raw/master/LibFoxxo.js'
 
+// Classes
+
+// Horizontal progress bar
+class HorizontalProgressBar {
+    #ctx = new DrawContext()
+    constructor({
+        width = 100,
+        height = 20,
+        fillColor = "#7814CF",
+        backgroundColor = "#00ffff",
+        cornerRadius = 10,
+        respectScreenScale = true,
+        progressPercentage = 0,
+        progressSteps = 100, // Progress precision
+        transparent = true // background
+    }) {
+        const progressStepLength = Math.floor(width / progressSteps)
+        this.#ctx.opaque = !transparent
+        this.#ctx.size = new Size(width, height)
+        this.#ctx.respectScreenScale = respectScreenScale
+
+        // draw the bar background
+        const bgPath = new Path()
+        const bgRect = new Rect(0, 0, width, this.#ctx.size.height)
+        bgPath.addRoundedRect(bgRect, cornerRadius, cornerRadius)
+        this.#ctx.addPath(bgPath)
+        this.#ctx.setFillColor(new Color(backgroundColor))
+        this.#ctx.fillPath()
+
+        // draw the progressbar
+        // determine the number of pixels needed
+        const progressLength = (progressStepLength * progressPercentage)
+        const progressPath = new Path()
+        const progressRect = new Rect(0, 0, progressLength, this.#ctx.size.height)
+        progressPath.addRoundedRect(progressRect, cornerRadius, cornerRadius)
+        this.#ctx.addPath(progressPath)
+        this.#ctx.setFillColor(new Color(fillColor))
+        this.#ctx.fillPath()
+    }
+    toImage() {
+        return this.#ctx.getImage()
+    }
+    get canvas() {
+        return this.#ctx
+    }
+}
+
+
 module.exports = {
     /**
      * Method to update your scripts. All it does is update, you'll have to implement your own update cycle code.
@@ -222,6 +270,7 @@ module.exports = {
         date.setHours(0, 0, 0, 0)
 
         return (+now - +date) / msInDay
-    }
+    },
+    HorizontalProgressBar
 }
 Script.complete()
