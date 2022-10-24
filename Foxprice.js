@@ -24,17 +24,20 @@
  * Name: Foxprice
  * Author: Ging
  * Year: 2022
+ * Deps:
+ * - https://github.com/supermamon/scriptable-no-background
+ * - https://github.com/ExperiBass/scriptable-scripts/blob/master/LibFoxxo.js
 */
 const PRESENT_SIZE = "Small"
 // Widget setup
 const common = importModule('LibFoxxo')
+const { transparent } = importModule('no-background')
 const FONT = Font.mediumSystemFont(16)
 
 const params = args.widgetParameter ? args.widgetParameter.split(',') : ['bitcoin', 'ethereum']
 
 // Select file source
 const files = common.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
-const bgPath = common.getFile(files, '/rice/topleft.jpg')
 
 // Self-update
 if (config.runsInApp) {
@@ -51,7 +54,7 @@ if (config.runsInApp) {
 }
 
 const widget = new ListWidget()
-widget.backgroundImage = files.readImage(bgPath)
+widget.backgroundImage = await transparent(Script.name())
 
 async function buildWidget() {
     for (const coin of params) {
