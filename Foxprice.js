@@ -30,23 +30,28 @@
 */
 const PRESENT_SIZE = "Small"
 // Widget setup
-const common = importModule('LibFoxxo')
+const {
+    isIniCloud, selfUpdate,
+    determineDaysFromNow,
+    createStack, createImage,
+    formatNumber, loadImage
+} = importModule('LibFoxxo')
 const { transparent } = importModule('no-background')
 const FONT = Font.mediumSystemFont(16)
 
 const params = args.widgetParameter ? args.widgetParameter.split(',') : ['bitcoin', 'ethereum']
 
 // Select file source
-const files = common.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
+const files = isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
 
 // Self-update
 if (config.runsInApp) {
     // check file update date
     const UPDATE_PERIOD = 7 // days
     const lastUpdated = files.modificationDate(module.filename)
-    if (common.determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
+    if (determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
         // Update
-        (await common.selfUpdate({
+        (await selfUpdate({
             srcurl: 'https://github.com/ExperiBass/scriptable-scripts/raw/master/Foxprice.js',
             filepath: module.filename, fs: files, shouldPiggyback: true
         }))
@@ -76,23 +81,23 @@ async function addCryptoLine(name) {
         id
     } = await fetchCoinInfo(name)
 
-    const rowStack = common.createStack({
+    const rowStack = createStack({
         parent: widget, padding: [2, 2, 0, 0],
         align: 'center', verticalLayout: false
     })
 
     if (config.runsInWidget && config.widgetFamily !== "small") {
         rowStack.url = `https://www.coingecko.com/en/coins/${id}`
-        const imageStack = common.createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
-        common.createImage({
+        const imageStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
+        createImage({
             parent: imageStack,
-            image: await common.loadImage(image),
+            image: await loadImage(image),
             width: 20, height: 20, align: 'left'
         })
     }
-    const symbolStack = common.createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
+    const symbolStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
     rowStack.addSpacer()
-    const priceStack = common.createStack({ parent: rowStack, padding: [0, 0, 0, 0] })
+    const priceStack = createStack({ parent: rowStack, padding: [0, 0, 0, 0] })
 
 
     // The text
@@ -106,7 +111,7 @@ async function addCryptoLine(name) {
     symbolText.textColor = new Color('#FFFFFF')
 
     if (config.runsInWidget && config.widgetFamily !== "small") {
-        const percentStack = common.createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
+        const percentStack = createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
         const percentText = percentStack.addText(growPercent)
         if (grow) {
             percentText.textColor = new Color('#4AF956')
@@ -124,9 +129,9 @@ async function fetchCoinInfo(coinID) {
     const req = new Request(url)
     const apiResult = (await req.loadJSON())[0]
     return {
-        price: common.formatNumber(apiResult.current_price),
+        price: formatNumber(apiResult.current_price),
         grow: (apiResult.price_change_24h > 0),
-        growPercent: `${common.formatNumber(apiResult.price_change_percentage_24h, { style: 'percent', maximumFractionDigits: 2 })}`,
+        growPercent: `${formatNumber(apiResult.price_change_percentage_24h, { style: 'percent', maximumFractionDigits: 2 })}`,
         symbol: apiResult.symbol.toUpperCase(),
         image: apiResult.image, id: apiResult.id
     }

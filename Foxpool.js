@@ -12,22 +12,27 @@
 */
 
 // Widget setup
-const common = importModule('LibFoxxo')
+const {
+    isIniCloud, determineDaysFromNow,
+    selfUpdate, getSymbol,
+    createStack, createImage,
+    createText, formatNumber
+} = importModule('LibFoxxo')
 const { transparent } = importModule('no-background')
 
 const params = args.widgetParameter ? args.widgetParameter.split(',') : []
 
 // Select file source
-const files = common.isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
+const files = isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
 
 // Self-update
 if (config.runsInApp) {
     // check file update date
     const UPDATE_PERIOD = 7 // days
     const lastUpdated = files.modificationDate(module.filename)
-    if (common.determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
+    if (determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
         // Update
-        (await common.selfUpdate({
+        (await selfUpdate({
             srcurl: 'https://github.com/ExperiBass/scriptable-scripts/raw/master/Foxpool.js',
             filepath: module.filename, fs: files, shouldPiggyback: true
         }))
@@ -61,12 +66,12 @@ const API_URL = `${widget.url}/api` // trailing slash left off
 const MIN_TEXT_SCALE = 0.5
 
 // Required symbols
-const totalTxSymbol = common.getSymbol('creditcard.fill')
-const totalSizeSymbol = common.getSymbol('macmini.fill') // ig this looks close enough to a drive
-const totalFeeSymbol = common.getSymbol('bitcoinsign.circle')
-const heightSymbol = common.getSymbol('tray.and.arrow.up.fill')
-const hashrateSymbol = common.getSymbol('gearshape.2.fill')
-const diffSymbol = common.getSymbol('hammer.fill')
+const totalTxSymbol = getSymbol('creditcard.fill')
+const totalSizeSymbol = getSymbol('macmini.fill') // ig this looks close enough to a drive
+const totalFeeSymbol = getSymbol('bitcoinsign.circle')
+const heightSymbol = getSymbol('tray.and.arrow.up.fill')
+const hashrateSymbol = getSymbol('gearshape.2.fill')
+const diffSymbol = getSymbol('hammer.fill')
 
 // Prebuild requests
 const mempoolInfo = new Request(`${API_URL}/mempool`)
@@ -78,19 +83,19 @@ const hashrate = new Request(`${API_URL}/v1/mining/hashrate/1m`) // hashrate and
 
 // Build main content stacks
 const topStack = widget.addStack()
-const mempoolStack = common.createStack({
+const mempoolStack = createStack({
     parent: topStack, width: 67.5, height: 115, backgroundColor: "#00000000",
     borderColor: widgetConf.border.color, borderRadius: widgetConf.border.radius,
     borderWidth: widgetConf.border.width, verticalLayout: true,
 })
 topStack.addSpacer(5)
-const hashrateStack = common.createStack({
+const hashrateStack = createStack({
     parent: topStack, width: mempoolStack.size.width, height: mempoolStack.size.height,
     backgroundColor: "#00000000", borderColor: widgetConf.border.color,
     borderRadius: widgetConf.border.radius, borderWidth: widgetConf.border.width,
     verticalLayout: true
 })
-const suggestedFeeStack = common.createStack({
+const suggestedFeeStack = createStack({
     parent: widget, width: 140, height: 20, backgroundColor: "#00000000",
     borderColor: widgetConf.border.color, borderRadius: widgetConf.border.radius,
     borderWidth: widgetConf.border.width, verticalLayout: false,
@@ -106,47 +111,47 @@ topStack.size = new Size(140, 120)
 
 const mempoolData = (await mempoolInfo.loadJSON())
 // TX count
-const txImageStack = common.createStack({
+const txImageStack = createStack({
     parent: mempoolStack, width: mempoolStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 txImageStack.addSpacer()
-const txImage = common.createImage({
+const txImage = createImage({
     parent: txImageStack, width: widgetConf.iconDims, height: widgetConf.iconDims,
     color: widgetConf.text.color, image: totalTxSymbol.image, align: 'center'
 })
 txImageStack.addSpacer()
-const txTextStack = common.createStack({
+const txTextStack = createStack({
     parent: mempoolStack, width: mempoolStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 txTextStack.addSpacer()
-common.createText({
+createText({
     parent: txTextStack,
-    content: common.formatNumber(mempoolData.count),
+    content: formatNumber(mempoolData.count),
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
 txTextStack.addSpacer()
 
 // Mempool size
-const sizeImageStack = common.createStack({
+const sizeImageStack = createStack({
     parent: mempoolStack, width: mempoolStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 sizeImageStack.addSpacer()
-const sizeImage = common.createImage({
+const sizeImage = createImage({
     parent: sizeImageStack, width: widgetConf.iconDims, height: widgetConf.iconDims,
     color: widgetConf.text.color, image: totalSizeSymbol.image, align: 'center'
 })
 sizeImageStack.addSpacer()
-const sizeTextStack = common.createStack({
+const sizeTextStack = createStack({
     parent: mempoolStack, width: mempoolStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 sizeTextStack.addSpacer()
-const sizeTextContent = common.formatNumber(mempoolData.vsize, { notation: 'compact', compactDisplay: 'short' })
-common.createText({
+const sizeTextContent = formatNumber(mempoolData.vsize, { notation: 'compact', compactDisplay: 'short' })
+createText({
     parent: sizeTextStack,
     content: `${sizeTextContent}vB`,
     minimumScaleFactor: MIN_TEXT_SCALE,
@@ -155,23 +160,23 @@ common.createText({
 sizeTextStack.addSpacer()
 
 // Mempool fee
-const feeImageStack = common.createStack({
+const feeImageStack = createStack({
     parent: mempoolStack, width: mempoolStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 feeImageStack.addSpacer()
-const feeImage = common.createImage({
+const feeImage = createImage({
     parent: feeImageStack, width: widgetConf.iconDims, height: widgetConf.iconDims,
     color: widgetConf.text.color, image: totalFeeSymbol.image, align: 'center'
 })
 feeImageStack.addSpacer()
-const feeTextStack = common.createStack({
+const feeTextStack = createStack({
     parent: mempoolStack, width: mempoolStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 feeTextStack.addSpacer()
-const feeTextContent = common.formatNumber(mempoolData.total_fee / 100000000) // 100 mil
-common.createText({
+const feeTextContent = formatNumber(mempoolData.total_fee / 100000000) // 100 mil
+createText({
     parent: feeTextStack,
     content: `₿ ${feeTextContent}`,
     minimumScaleFactor: MIN_TEXT_SCALE,
@@ -185,23 +190,23 @@ feeTextStack.addSpacer()
 
 const miningData = (await hashrate.loadJSON())
 // Block height
-const heightImageStack = common.createStack({
+const heightImageStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 heightImageStack.addSpacer()
-const heightImage = common.createImage({
+const heightImage = createImage({
     parent: heightImageStack, width: widgetConf.iconDims, height: widgetConf.iconDims,
     color: widgetConf.text.color, image: heightSymbol.image, align: 'center'
 })
 heightImageStack.addSpacer()
 
 const currHeight = (await blockHeight.loadString())
-const heightTextStack = common.createStack({
+const heightTextStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width, align: 'center'
 })
 heightTextStack.addSpacer()
-common.createText({
+createText({
     parent: heightTextStack,
     content: currHeight,
     minimumScaleFactor: MIN_TEXT_SCALE,
@@ -210,24 +215,24 @@ common.createText({
 heightTextStack.addSpacer()
 
 // Global hashrate
-const hashrateImageStack = common.createStack({
+const hashrateImageStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 hashrateImageStack.addSpacer()
-const hashrateImage = common.createImage({
+const hashrateImage = createImage({
     parent: hashrateImageStack, width: widgetConf.iconDims, height: widgetConf.iconDims,
     color: widgetConf.text.color, image: hashrateSymbol.image, align: 'center'
 })
 hashrateImageStack.addSpacer()
 
-const hashrateTextStack = common.createStack({
+const hashrateTextStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width, align: 'center'
 })
 // We can afford to lose a bit of precision
 const hashps = (Number(miningData.currentHashrate) / Number(1000000000000000000n)).toFixed(2)
 hashrateTextStack.addSpacer()
-common.createText({
+createText({
     parent: hashrateTextStack,
     content: `${hashps}`,
     minimumScaleFactor: MIN_TEXT_SCALE,
@@ -236,24 +241,24 @@ common.createText({
 hashrateTextStack.addSpacer()
 // Difficulty
 
-const diffImageStack = common.createStack({
+const diffImageStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
 })
 diffImageStack.addSpacer()
-const diffImage = common.createImage({
+const diffImage = createImage({
     parent: diffImageStack, width: widgetConf.iconDims, height: widgetConf.iconDims,
     color: widgetConf.text.color, image: diffSymbol.image, align: 'center'
 })
 diffImageStack.addSpacer()
 
-const diffTextStack = common.createStack({
+const diffTextStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width, align: 'center'
 })
 diffTextStack.addSpacer()
-common.createText({
+createText({
     parent: diffTextStack,
-    content: common.formatNumber(miningData.currentDifficulty, { notation: 'compact', compactDisplay: 'short' }),
+    content: formatNumber(miningData.currentDifficulty, { notation: 'compact', compactDisplay: 'short' }),
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
@@ -264,11 +269,11 @@ diffTextStack.addSpacer()
 ///////////////////////
 
 const suggestedFeeData = (await feeSuggestions.loadJSON())
-const suggestedFeeTextStack = common.createStack({
+const suggestedFeeTextStack = createStack({
     parent: suggestedFeeStack, width: suggestedFeeStack.size.width, align: 'center'
 })
 suggestedFeeTextStack.addSpacer()
-common.createText({
+createText({
     parent: suggestedFeeTextStack,
     content: `${suggestedFeeData.hourFee} sat/vB ${suggestedFeeData.halfHourFee} sat/vB ${suggestedFeeData.fastestFee} sat/vB`,
     minimumScaleFactor: MIN_TEXT_SCALE,
