@@ -10,6 +10,7 @@
  * Donate: bc1qd65n4y562q6vdp5lx7953uqj0hqxn9k8rqx08y
 */
 const SRC_URL = 'https://github.com/ExperiBass/scriptable-scripts/raw/master/LibFoxxo.js'
+const UPDATE_PERIOD = 7 // days
 
 // Classes
 
@@ -73,37 +74,22 @@ module.exports = {
      * @param {string} alertOptions.failMessage
      * @returns {boolean} true if success, false otherwise.
      */
-    async selfUpdate({ filename, srcurl, fs, shouldPiggyback = false, alertOptions = {
-        title: 'Update complete!',
-        message: 'The script has been updated!', failMessage: 'The script failed to update! D:'
-    } }) {
+    async selfUpdate({ filepath, srcurl, fs, shouldPiggyback = false }) {
         try {
             const req = new Request(srcurl)
-            fs.writeString(filename, await req.loadString())
+            fs.writeString(filepath, await req.loadString())
 
             if (shouldPiggyback) {
                 // piggyback off of the end user and update ourselves too
-                const selfup = new Request(SRC_URL)
-                fs.writeString(module.filename, await selfup.loadString())
+                const lastUpdated = fs.modificationDate(module.filename)
+                if (module.exports.determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
+                    const selfup = new Request(SRC_URL)
+                    fs.writeString(module.filename, await selfup.loadString())
+                }
             }
-
-            const alert = await module.exports.createAlert(alertOptions.title, alertOptions.message, {
-                actions: [{
-                    type: 'default',
-                    title: "OK"
-                }]
-            })
-            alert.presentAlert()
             return true
         } catch (e) {
             console.error(`[LibFoxxo][selfUpdate]: ${e}`)
-            const alert = await module.exports.createAlert(alertOptions.title, alertOptions.failMessage, {
-                actions: [{
-                    type: 'default',
-                    title: "OK"
-                }]
-            })
-            alert.presentAlert()
             return false
         }
     },

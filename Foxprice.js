@@ -48,7 +48,7 @@ if (config.runsInApp) {
         // Update
         (await common.selfUpdate({
             srcurl: 'https://github.com/ExperiBass/scriptable-scripts/raw/master/Foxprice.js',
-            filename: module.filename, fs: files, shouldPiggyback: true
+            filepath: module.filename, fs: files, shouldPiggyback: true
         }))
     }
 }
