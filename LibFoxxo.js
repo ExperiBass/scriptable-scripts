@@ -28,7 +28,7 @@ class HorizontalProgressBar {
         progressSteps = 100, // Progress precision
         transparent = true // background
     }) {
-        const progressStepLength = Math.floor(width / progressSteps)
+        const progressStepLength = (width / progressSteps).toFixed(3)
         this.#ctx.opaque = !transparent
         this.#ctx.size = new Size(width, height)
         this.#ctx.respectScreenScale = respectScreenScale
