@@ -57,7 +57,13 @@ const widgetConf = {
     iconDims: 20
 }
 
+// Don't update until 5 minutes have passed
+// This avoids any potential spamming
+const DONT_UPDATE_UNTIL = 5 * 60 * 1000 // 5 mins in ms
+
 const widget = new ListWidget()
+// add 5 mins to the current date, and then wrap it up in a date
+widget.refreshAfterDate = new Date( (new Date()).valueOf() + DONT_UPDATE_UNTIL )
 widget.backgroundImage = await transparent(Script.name())
 widget.url = 'https://mempool.space'
 widget.setPadding(0, 0, 0, 0)
