@@ -77,14 +77,14 @@ module.exports = {
     async selfUpdate({ filepath, srcurl, fs, shouldPiggyback = false }) {
         try {
             const req = new Request(srcurl)
-            fs.writeString(filepath, await req.loadString())
+            const newFile = await req.loadString()
+            fs.writeString(filepath, newFile)
 
             if (shouldPiggyback) {
                 // piggyback off of the end user and update ourselves too
                 const lastUpdated = fs.modificationDate(module.filename)
                 if (module.exports.determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
-                    const selfup = new Request(SRC_URL)
-                    fs.writeString(module.filename, await selfup.loadString())
+                    await module.exports.selfUpdate({srcurl: SRC_URL, filepath: module.filename, fs: fs})
                 }
             }
             return true
@@ -193,7 +193,7 @@ module.exports = {
 
             return stacc
         } catch (e) {
-            throw Error(`[LibFoxxo][createStack]: ${e}`)
+            throw Error(`[LibFoxxo][createStack]: ${e.stack}`)
         }
     },
     createImage({
@@ -218,7 +218,7 @@ module.exports = {
             img[`${align.toLowerCase()}AlignImage`]()
             return img
         } catch (e) {
-            throw Error(`[LibFoxxo][createImage]: ${e}`)
+            throw Error(`[LibFoxxo][createImage]: ${e.stack}`)
         }
     },
     createText({
@@ -246,7 +246,7 @@ module.exports = {
             txt[`${align.toLowerCase()}AlignText`]()
             return txt
         } catch (e) {
-            throw Error(`[LibFoxxo][createText]: ${e}`)
+            throw Error(`[LibFoxxo][createText]: ${e.stack}`)
         }
     },
     determineDaysFromNow(date) {

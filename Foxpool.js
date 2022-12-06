@@ -2,7 +2,7 @@
 // These must be at the very top of the file. Do not edit.
 // icon-color: blue; icon-glyph: server;
 /**
- * Displays mempool info from mempool.space.
+ * Displays mempool info from bitcoinexplorer.org (or a self-hosted instance).
  * Name: Foxpool
  * Author: Ging
  * Year: 2022
@@ -10,6 +10,7 @@
  * - https://github.com/supermamon/scriptable-no-background
  * - https://github.com/ExperiBass/scriptable-scripts/blob/master/LibFoxxo.js
 */
+/// First parameter given is assumed to be the instance wanted
 
 // Widget setup
 const {
@@ -21,6 +22,7 @@ const {
 const { transparent } = importModule('no-background')
 
 const params = args.widgetParameter ? args.widgetParameter.split(',') : []
+// [0] = explorer instance
 
 // Select file source
 const files = isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()
@@ -46,13 +48,14 @@ const widgetConf = {
     border: {
         color: "#000000",
         radius: 12,
-        width: 1
+        width: 0
     },
     font: {
         large: Font.mediumSystemFont(64),
         medium: Font.mediumSystemFont(32),
         small: Font.mediumSystemFont(16)
     },
+    spacing: 2,
     iconStackHeight: 0,
     iconDims: 20
 }
@@ -65,7 +68,7 @@ const widget = new ListWidget()
 // add 5 mins to the current date, and then wrap it up in a date
 widget.refreshAfterDate = new Date( (new Date()).valueOf() + DONT_UPDATE_UNTIL )
 widget.backgroundImage = await transparent(Script.name())
-widget.url = 'https://mempool.space'
+widget.url = params[0] || 'https://bitcoinexplorer.org'
 widget.setPadding(0, 0, 0, 0)
 
 const API_URL = `${widget.url}/api` // trailing slash left off
@@ -80,11 +83,10 @@ const hashrateSymbol = getSymbol('gearshape.2.fill')
 const diffSymbol = getSymbol('hammer.fill')
 
 // Prebuild requests
-const mempoolInfo = new Request(`${API_URL}/mempool`)
+const mempoolInfo = new Request(`${API_URL}/mempool/info`)
+const feeSuggestions = new Request(`${API_URL}/mempool/fees`)
 const blockHeight = new Request(`${API_URL}/blocks/tip/height`)
-const feeSuggestions = new Request(`${API_URL}/v1/fees/recommended`)
-const hashrate = new Request(`${API_URL}/v1/mining/hashrate/1m`) // hashrate and diff
-
+const hashrate = new Request(`${API_URL}/mining/hashrate`) // hashrate and diff
 
 
 // Build main content stacks
@@ -111,11 +113,15 @@ const suggestedFeeStack = createStack({
 topStack.layoutHorizontally()
 topStack.size = new Size(140, 120)
 
+mempoolStack.spacing = widgetConf.spacing
+hashrateStack.spacing = widgetConf.spacing
+
 //////////////////
 // Mempool Info //
 //////////////////
 
 const mempoolData = (await mempoolInfo.loadJSON())
+
 // TX count
 const txImageStack = createStack({
     parent: mempoolStack, width: mempoolStack.size.width,
@@ -134,7 +140,7 @@ const txTextStack = createStack({
 txTextStack.addSpacer()
 createText({
     parent: txTextStack,
-    content: formatNumber(mempoolData.count),
+    content: formatNumber(mempoolData.size),
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
@@ -156,7 +162,7 @@ const sizeTextStack = createStack({
     height: widgetConf.iconStackHeight, align: 'center'
 })
 sizeTextStack.addSpacer()
-const sizeTextContent = formatNumber(mempoolData.vsize, { notation: 'compact', compactDisplay: 'short' })
+const sizeTextContent = formatNumber(mempoolData.bytes, { notation: 'compact', compactDisplay: 'short' })
 createText({
     parent: sizeTextStack,
     content: `${sizeTextContent}vB`,
