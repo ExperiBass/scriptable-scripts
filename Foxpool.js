@@ -187,7 +187,7 @@ const feeTextStack = createStack({
     height: widgetConf.iconStackHeight, align: 'center'
 })
 feeTextStack.addSpacer()
-const feeTextContent = formatNumber(mempoolData.total_fee / 100000000) // 100 mil
+const feeTextContent = formatNumber(mempoolData.total_fee)
 createText({
     parent: feeTextStack,
     content: `₿ ${feeTextContent}`,
