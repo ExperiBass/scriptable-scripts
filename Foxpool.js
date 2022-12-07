@@ -200,7 +200,7 @@ feeTextStack.addSpacer()
 // Hashrate Info //
 ///////////////////
 
-const miningData = (await hashrate.loadJSON())
+const miningData = (await hashrate.loadJSON())["1Day"]
 // Block height
 const heightImageStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width,
@@ -241,18 +241,17 @@ hashrateImageStack.addSpacer()
 const hashrateTextStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width, align: 'center'
 })
-// We can afford to lose a bit of precision
-const hashps = (Number(miningData.currentHashrate) / Number(1000000000000000000n)).toFixed(2)
+
 hashrateTextStack.addSpacer()
 createText({
     parent: hashrateTextStack,
-    content: `${hashps}`,
+    content: `${miningData.val}`,
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
 hashrateTextStack.addSpacer()
-// Difficulty
 
+// Difficulty
 const diffImageStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width,
     height: widgetConf.iconStackHeight, align: 'center'
@@ -270,7 +269,7 @@ const diffTextStack = createStack({
 diffTextStack.addSpacer()
 createText({
     parent: diffTextStack,
-    content: formatNumber(miningData.currentDifficulty, { notation: 'compact', compactDisplay: 'short' }),
+    content: "",//formatNumber(miningData.string1, { notation: 'compact', compactDisplay: 'short' }),
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
@@ -287,7 +286,7 @@ const suggestedFeeTextStack = createStack({
 suggestedFeeTextStack.addSpacer()
 createText({
     parent: suggestedFeeTextStack,
-    content: `${suggestedFeeData.hourFee} sat/vB ${suggestedFeeData.halfHourFee} sat/vB ${suggestedFeeData.fastestFee} sat/vB`,
+    content: `${suggestedFeeData["60min"]} sat/vB ${suggestedFeeData["30min"]} sat/vB ${suggestedFeeData["nextBlock"]} sat/vB`,
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
