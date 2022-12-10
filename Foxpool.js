@@ -83,7 +83,7 @@ const hashrateSymbol = getSymbol('gearshape.2.fill')
 const diffSymbol = getSymbol('hammer.fill')
 
 // Prebuild requests
-const mempoolInfo = new Request(`${API_URL}/mempool/info`)
+const mempoolInfo = new Request(`${API_URL}/mempool/summary`)
 const feeSuggestions = new Request(`${API_URL}/mempool/fees`)
 const blockHeight = new Request(`${API_URL}/blocks/tip/height`)
 const hashrate = new Request(`${API_URL}/mining/hashrate`) // hashrate and diff
