@@ -29,6 +29,8 @@
  * - https://github.com/ExperiBass/scriptable-scripts/blob/master/LibFoxxo.js
 */
 const PRESENT_SIZE = "Small"
+const GREEN = new Color('#4AF956')
+const RED = new Color('#FD4E00')
 // Widget setup
 const {
     isIniCloud, selfUpdate,
@@ -104,20 +106,27 @@ async function addCryptoLine(name) {
     const symbolText = symbolStack.addText(symbol)
     symbolText.font = FONT
     symbolText.leftAlignText()
-    symbolText.textColor = new Color('#FFFFFF')
 
     const priceText = priceStack.addText(price)
     priceText.font = FONT
     priceText.rightAlignText()
 
+    if (config.widgetFamily === "small") {
+        if (grow) {
+            priceText.textColor = GREEN
+        } else {
+            priceText.textColor = RED
+        }
+    }
+
     if (config.widgetFamily !== "small") {
         const percentStack = createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
         const percentText = percentStack.addText(growPercent)
         if (grow) {
-            percentText.textColor = new Color('#4AF956')
+            percentText.textColor = GREEN
             percentText.text = `+${percentText.text}`
         } else {
-            percentText.textColor = new Color('#FD4E00')
+            percentText.textColor = RED
         }
     }
 
