@@ -104,13 +104,13 @@ async function addCryptoLine(name) {
     const symbolText = symbolStack.addText(symbol)
     symbolText.font = FONT
     symbolText.leftAlignText()
+    symbolText.textColor = new Color('#FFFFFF')
+
     const priceText = priceStack.addText(price)
     priceText.font = FONT
     priceText.rightAlignText()
 
-    symbolText.textColor = new Color('#FFFFFF')
-
-    if (config.runsInWidget && config.widgetFamily !== "small") {
+    if (config.widgetFamily !== "small") {
         const percentStack = createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
         const percentText = percentStack.addText(growPercent)
         if (grow) {
@@ -129,9 +129,9 @@ async function fetchCoinInfo(coinID) {
     const req = new Request(url)
     const apiResult = (await req.loadJSON())[0]
     return {
-        price: formatNumber(apiResult.current_price.toFixed(2)),
+        price: formatNumber(apiResult.current_price, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         grow: (apiResult.price_change_24h > 0),
-        growPercent: `${apiResult.price_change_percentage_24h.toFixed(2)}%`,
+        growPercent: `${apiResult.price_change_percentage_24h.toFixed(2)}%`, // i dont trust JS around negatives...
         symbol: apiResult.symbol.toUpperCase(),
         image: apiResult.image, id: apiResult.id
     }
