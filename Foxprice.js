@@ -86,7 +86,7 @@ async function addCryptoLine(name) {
         align: 'center', verticalLayout: false
     })
 
-    if (config.runsInWidget && config.widgetFamily !== "small") {
+    if (config.widgetFamily !== "small") {
         rowStack.url = `https://www.coingecko.com/en/coins/${id}`
         const imageStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
         createImage({
@@ -129,9 +129,9 @@ async function fetchCoinInfo(coinID) {
     const req = new Request(url)
     const apiResult = (await req.loadJSON())[0]
     return {
-        price: formatNumber(apiResult.current_price),
+        price: formatNumber(apiResult.current_price.toFixed(2)),
         grow: (apiResult.price_change_24h > 0),
-        growPercent: `${formatNumber(apiResult.price_change_percentage_24h, { style: 'percent', maximumFractionDigits: 2 })}`,
+        growPercent: `${apiResult.price_change_percentage_24h.toFixed(2)}%`,
         symbol: apiResult.symbol.toUpperCase(),
         image: apiResult.image, id: apiResult.id
     }
