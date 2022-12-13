@@ -25,7 +25,7 @@ const RPC_URL = params[0] // http://url:8334
 const RPC_AUTH = params[1] // user:pass
 const FONT = Font.mediumSystemFont(16)
 const MIN_TEXT_SCALE = 0.5
-const STACK_GAP = 4
+const STACK_GAP = 10
 const IMAGE_PADDING = [0, 0, 0, 5]
 const ICON_DIMS = 20
 const ICONS = {
@@ -82,7 +82,7 @@ async function buildWidget() {
     })
     rootStack.addSpacer(4)
     const infoStackRoot = createStack({
-        parent: rootStack, width: rootStack.size.width, height: (rootStack.size.height - nameStack.size.height)
+        parent: rootStack, width: rootStack.size.width
     })
 
     const infoStackL = createStack({
@@ -102,24 +102,16 @@ async function buildWidget() {
         verticalLayout: true
     })
     createSubStacks(infoStackR)
-    /*const infoStackFarR = createStack({
-        parent: infoStackRoot, width: infoStackWidth,
-        verticalLayout: true
-    })
-    createSubStacks(infoStackFarR)*/
-
-
 
     // populate stacks
     createText({
         parent: nameStack,
         content: node.name,
         minimumScaleFactor: MIN_TEXT_SCALE,
-        font: FONT,
-        centered: true
+        font: FONT, centered: true
     })
 
-    // FarL
+    // L
     createImage({
         parent: infoStackL.substack1, width: ICON_DIMS,
         height: ICON_DIMS, image: ICONS.uptime, color: "#ffffff"
@@ -129,8 +121,7 @@ async function buildWidget() {
         parent: infoStackL.substack1,
         content: node.uptime,
         minimumScaleFactor: MIN_TEXT_SCALE,
-        font: FONT,
-        centered: true
+        font: FONT
     })
     createImage({
         parent: infoStackL.substack2, width: ICON_DIMS,
@@ -141,8 +132,7 @@ async function buildWidget() {
         parent: infoStackL.substack2,
         content: node.version,
         minimumScaleFactor: MIN_TEXT_SCALE,
-        font: FONT,
-        centered: true
+        font: FONT
     })
     createImage({
         parent: infoStackL.substack3, width: ICON_DIMS,
@@ -153,12 +143,12 @@ async function buildWidget() {
         parent: infoStackL.substack3,
         content: node.protocolversion,
         minimumScaleFactor: MIN_TEXT_SCALE,
-        font: FONT,
-        centered: true
+        font: FONT
     })
 
+    infoStackRoot.addSpacer(STACK_GAP)
 
-    // MidL
+    // M
     createImage({
         parent: infoStackM.substack1, width: ICON_DIMS,
         height: ICON_DIMS, image: ICONS.totalconns, color: "#ffffff"
@@ -169,7 +159,7 @@ async function buildWidget() {
         content: node.connections.total,
         minimumScaleFactor: MIN_TEXT_SCALE,
         font: FONT,
-        centered: true
+
     })
     createImage({
         parent: infoStackM.substack2, width: ICON_DIMS,
@@ -181,7 +171,7 @@ async function buildWidget() {
         content: node.connections.in,
         minimumScaleFactor: MIN_TEXT_SCALE,
         font: FONT,
-        centered: true
+
     })
     createImage({
         parent: infoStackM.substack3, width: ICON_DIMS,
@@ -193,9 +183,12 @@ async function buildWidget() {
         content: node.connections.out,
         minimumScaleFactor: MIN_TEXT_SCALE,
         font: FONT,
-        centered: true
+
     })
-    // MidR
+
+    infoStackRoot.addSpacer(STACK_GAP)
+
+    // R
     createImage({
         parent: infoStackR.substack1, width: ICON_DIMS,
         height: ICON_DIMS, image: ICONS.chainSize, color: "#ffffff"
@@ -206,7 +199,7 @@ async function buildWidget() {
         content: node.chain.size,
         minimumScaleFactor: MIN_TEXT_SCALE,
         font: FONT,
-        centered: true
+
     })
     createImage({
         parent: infoStackR.substack2, width: ICON_DIMS,
@@ -218,7 +211,7 @@ async function buildWidget() {
         content: node.uploaded,
         minimumScaleFactor: MIN_TEXT_SCALE,
         font: FONT,
-        centered: true
+
     })
     createImage({
         parent: infoStackR.substack3, width: ICON_DIMS,
@@ -230,7 +223,7 @@ async function buildWidget() {
         content: node.downloaded,
         minimumScaleFactor: MIN_TEXT_SCALE,
         font: FONT,
-        centered: true
+
     })
 
 }
@@ -251,7 +244,7 @@ async function getNodeInfo() {
         name: netInfo.subversion.match(NODE_NAME_REGEX)[1],
         version: netInfo.subversion.match(NODE_VERSION_REGEX)[1],
         protocolversion: netInfo.protocolversion.toString(),
-        uptime: toHHMMSS(await sendRequestToNode("uptime")),
+        uptime: toHHMM(await sendRequestToNode("uptime")),
         connections: {
             in: formatNumber(netInfo.connections_in),
             out: formatNumber(netInfo.connections_out),
@@ -284,16 +277,15 @@ function createSubStacks(rootStack) {
     }
 }
 // https://stackoverflow.com/a/34841026
-function toHHMMSS(secs) {
+function toHHMM(secs) {
     const sec_num = secs
     const hours = Math.floor(sec_num / 3600)
     const minutes = Math.floor(sec_num / 60) % 60
-    const seconds = sec_num % 60
 
-    return [hours, minutes, seconds]
+    return [hours, minutes]
         .map(v => v < 10 ? "0" + v : v)
         .filter((v, i) => v !== "00" || i > 0)
-        .join(":")
+        .join("h") + "m"
 }
 
 await buildWidget()
