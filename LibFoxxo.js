@@ -228,13 +228,16 @@ module.exports = {
         maxLines = 0,
         minimumScaleFactor = 1,
         url = null,
+        centered = false,
         align = 'left' // 'left', 'center', 'right'
     }) {
         try {
             if (!parent) {
                 throw Error('parent not defined')
             }
+            centered ? parent.addSpacer() : ""
             const txt = parent.addText(content)
+            centered ? parent.addSpacer() : ""
             txt.lineLimit = maxLines
             if (font) {
                 txt.font = font
@@ -257,6 +260,7 @@ module.exports = {
 
         return (+now - +date) / msInDay
     },
-    HorizontalProgressBar
+    HorizontalProgressBar,
+    version: 1
 }
 Script.complete()
