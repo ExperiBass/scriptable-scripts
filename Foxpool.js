@@ -79,7 +79,7 @@ function formatBytes(bytes, decimals = 2) {
 
     const k = 1024
     const dm = decimals < 0 ? 0 : decimals
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    const sizes = ['vB', 'KvB', 'MvB', 'GvB']
 
     const i = Math.floor(Math.log(bytes) / Math.log(k))
 
@@ -173,10 +173,9 @@ const sizeTextStack = createStack({
     height: widgetConf.iconStackHeight, align: 'center'
 })
 sizeTextStack.addSpacer()
-const sizeTextContent = formatBytes(mempoolData.bytes)
 createText({
     parent: sizeTextStack,
-    content: `${sizeTextContent}vB`,
+    content: formatBytes(mempoolData.bytes),
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
