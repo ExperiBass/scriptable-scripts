@@ -254,9 +254,10 @@ const hashrateTextStack = createStack({
 })
 
 hashrateTextStack.addSpacer()
+const hashrateText = `${formatNumber((miningData.raw / miningData.unitMultiplier).toFixed(2))}${miningData.unitAbbreviation}`
 createText({
     parent: hashrateTextStack,
-    content: `${miningData.val}`,
+    content: hashrateText,
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
