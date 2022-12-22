@@ -15,7 +15,7 @@ const UPDATE_PERIOD = 7 // days
 // Classes
 
 // Horizontal progress bar
-class HorizontalProgressBar {
+class ProgressBar {
     #ctx = new DrawContext()
     constructor({
         width = 100,
@@ -26,16 +26,23 @@ class HorizontalProgressBar {
         respectScreenScale = true,
         progressPercentage = 0,
         progressSteps = 100, // Progress precision
-        transparent = true // background
+        transparent = true, // background
+        vertical = false
     }) {
-        const progressStepLength = (width / progressSteps).toFixed(3)
         this.#ctx.opaque = !transparent
         this.#ctx.size = new Size(width, height)
         this.#ctx.respectScreenScale = respectScreenScale
 
+        let progressStepLength;
+        if (vertical) {
+            progressStepLength = (this.#ctx.size.height / progressSteps).toFixed(3)
+        } else {
+            progressStepLength = (this.#ctx.size.width / progressSteps).toFixed(3)
+        }
+
         // draw the bar background
         const bgPath = new Path()
-        const bgRect = new Rect(0, 0, width, this.#ctx.size.height)
+        const bgRect = new Rect(0, 0, this.#ctx.size.height, this.#ctx.size.height)
         bgPath.addRoundedRect(bgRect, cornerRadius, cornerRadius)
         this.#ctx.addPath(bgPath)
         this.#ctx.setFillColor(new Color(backgroundColor))
@@ -45,7 +52,12 @@ class HorizontalProgressBar {
         // determine the number of pixels needed
         const progressLength = (progressStepLength * progressPercentage)
         const progressPath = new Path()
-        const progressRect = new Rect(0, 0, progressLength, this.#ctx.size.height)
+        let progressRect;
+        if (vertical) {
+            progressRect = new Rect(0, 0, this.#ctx.size.width, progressLength)
+        } else {
+            progressRect = new Rect(0, 0, progressLength, this.#ctx.size.height)
+        }
         progressPath.addRoundedRect(progressRect, cornerRadius, cornerRadius)
         this.#ctx.addPath(progressPath)
         this.#ctx.setFillColor(new Color(fillColor))
@@ -260,7 +272,7 @@ module.exports = {
 
         return (+now - +date) / msInDay
     },
-    HorizontalProgressBar,
+    ProgressBar,
     version: 1
 }
 Script.complete()
