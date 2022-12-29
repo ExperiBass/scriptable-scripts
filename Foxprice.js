@@ -88,7 +88,7 @@ async function addCryptoLine(name) {
         align: 'center', verticalLayout: false
     })
 
-    if (config.widgetFamily !== "small") {
+    if (config.runsInWidget && config.widgetFamily !== "small") {
         rowStack.url = `https://www.coingecko.com/en/coins/${id}`
         const imageStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
         createImage({
@@ -111,7 +111,7 @@ async function addCryptoLine(name) {
     priceText.font = FONT
     priceText.rightAlignText()
 
-    if (config.widgetFamily === "small") {
+    if (config.runsInWidget && config.widgetFamily === "small") {
         if (grow) {
             priceText.textColor = GREEN
         } else {
@@ -119,7 +119,7 @@ async function addCryptoLine(name) {
         }
     }
 
-    if (config.widgetFamily !== "small") {
+    if (config.runsInWidget && config.widgetFamily !== "small") {
         const percentStack = createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
         const percentText = percentStack.addText(growPercent)
         if (grow) {
