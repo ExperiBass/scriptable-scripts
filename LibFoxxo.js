@@ -27,7 +27,8 @@ class ProgressBar {
         progressPercentage = 0,
         progressSteps = 100, // Progress precision
         transparent = true, // background
-        vertical = false
+        vertical = false,
+        startFromTop = false
     }) {
         this.#ctx.opaque = !transparent
         this.#ctx.size = new Size(width, height)
@@ -54,7 +55,11 @@ class ProgressBar {
         const progressPath = new Path()
         let progressRect;
         if (vertical) {
-            progressRect = new Rect(0, 0, this.#ctx.size.width, progressLength)
+            let offset = 0
+            if (startFromTop) {
+                offset = this.#ctx.size.height - progressLength
+            }
+            progressRect = new Rect(0, offset, this.#ctx.size.width, progressLength)
         } else {
             progressRect = new Rect(0, 0, progressLength, this.#ctx.size.height)
         }
