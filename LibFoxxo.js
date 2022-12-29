@@ -42,7 +42,7 @@ class ProgressBar {
 
         // draw the bar background
         const bgPath = new Path()
-        const bgRect = new Rect(0, 0, this.#ctx.size.height, this.#ctx.size.height)
+        const bgRect = new Rect(0, 0, this.#ctx.size.width, this.#ctx.size.height)
         bgPath.addRoundedRect(bgRect, cornerRadius, cornerRadius)
         this.#ctx.addPath(bgPath)
         this.#ctx.setFillColor(new Color(backgroundColor))
