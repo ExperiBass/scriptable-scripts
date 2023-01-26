@@ -54,7 +54,7 @@ if (config.runsInApp) {
     if (determineDaysFromNow(lastUpdated) >= UPDATE_PERIOD) {
         // Update
         (await selfUpdate({
-            srcurl: 'https://github.com/ExperiBass/scriptable-scripts/raw/master/Foxprice.js',
+            srcurl: `https://github.com/ExperiBass/scriptable-scripts/raw/master/${Script.name()}.js`,
             filepath: module.filename, fs: files, shouldPiggyback: true
         }))
     }
