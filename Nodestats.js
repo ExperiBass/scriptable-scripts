@@ -16,7 +16,7 @@ const {
     isIniCloud, determineDaysFromNow,
     selfUpdate, getSymbol,
     createStack, createText, createImage,
-    formatNumber
+    formatNumber, toDDHHMM
 } = importModule('LibFoxxo')
 const { transparent } = importModule('no-background')
 
@@ -26,7 +26,7 @@ const RPC_AUTH = params[1] // user:pass
 const NODE_NAME_REGEX = /\((.+)\)/i
 const NODE_VERSION_REGEX = /(\d+.\d+.\d+)/i
 const FONT = Font.mediumSystemFont(16)
-const MIN_TEXT_SCALE = 0.5
+const MIN_TEXT_SCALE = 0.2
 const STACK_GAP = 10
 const IMAGE_PADDING = [0, 0, 0, 5]
 const ICON_DIMS = 20
@@ -72,25 +72,6 @@ async function sendRequestToNode(method) {
     req.headers = new Object(REQUEST_HEADERS)
     req.body = `{"method":"${method}"}`
     return (await req.loadJSON())['result']
-}
-// https://stackoverflow.com/a/34841026, heavily tweaked
-function toDDHHMM(secs, padding = false) {
-    const markers = ["d", "h", "m"]
-    const totalHours = Math.floor(secs / 3600)
-    const hours = totalHours % 24
-    const days = Math.floor(totalHours / 24)
-    const minutes = days > 99 ? 0 : Math.floor(secs / 60) % 60
-
-    return [days, hours, minutes]
-        .map(v => {
-            if (padding) {
-                return v > 9 ? v : "0" + v
-            }
-            return v
-        }) // first add padding, if wanted ([2, 0, 13] -> ["02", "00", "13"])
-        .map((v, i) => `${v}${markers[i]}`) // add time markers ([2, 0, 13] -> ["2d", "0h", "13m"])
-        .filter((v) => padding ? !v.startsWith("00") : !v.startsWith("0")) // then filter out 0 values (["2d", "0h", "13m"] -> ["2d", "13m"])
-        .join("") // and finally join ("2d13m")
 }
 // https://stackoverflow.com/a/18650828, slightly tweaked
 function formatBytes(bytes) {
