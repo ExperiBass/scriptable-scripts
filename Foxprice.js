@@ -142,7 +142,8 @@ async function fetchCoinInfo(coinID) {
         grow: (apiResult.price_change_24h > 0),
         growPercent: `${apiResult.price_change_percentage_24h.toFixed(2)}%`, // i dont trust JS around negatives...
         symbol: apiResult.symbol.toUpperCase(),
-        image: apiResult.image, id: apiResult.id
+        image: apiResult.image,
+        id: apiResult.id
     }
 }
 

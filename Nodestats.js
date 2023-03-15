@@ -73,15 +73,25 @@ async function sendRequestToNode(method) {
     req.body = `{"method":"${method}"}`
     return (await req.loadJSON())['result']
 }
-// https://stackoverflow.com/a/34841026, slightly tweaked
-function toHHMM(secs) {
-    const hours = Math.floor(secs / 3600)
+// https://stackoverflow.com/a/34841026, heavily tweaked
+function toDDHHMM(secs, padding = false) {
+    const markers = ["d", "h", "m"]
+    const totalHours = Math.floor(secs / 3600)
+    const hours = totalHours % 24
     const minutes = Math.floor(secs / 60) % 60
+    const days = Math.floor(totalHours / 24)
 
-    return [hours, minutes]
-        .map(v => v < 10 ? "0" + v : v)
-        .filter((v, i) => v !== "00" || i > 0)
-        .join("h") + "m"
+    return [days, hours, minutes]
+        .map(v => {
+            if (padding) {
+                return v > 9 ? v : "0" + v
+            }
+            return v
+        }) // first add padding, if wanted ([2, 0, 13] -> ["02", "00", "13"])
+
+        .map((v, i) => `${v}${markers[i]}`) // add time markers ([2, 0, 13] -> ["2d", "0h", "13m"])
+        .filter((v) => padding ? !v.startsWith("00") : !v.startsWith("0")) // then filter out 0 values (["2d", "0h", "13m"] -> ["02d", "13m"])
+        .join("") // and finally join ("02d")
 }
 // https://stackoverflow.com/a/18650828, slightly tweaked
 function formatBytes(bytes) {
@@ -112,7 +122,7 @@ async function getNodeInfo() {
         name: netInfo.subversion.match(NODE_NAME_REGEX)[1],
         version: netInfo.subversion.match(NODE_VERSION_REGEX)[1],
         protocolversion: netInfo.protocolversion.toString(),
-        uptime: toHHMM(await sendRequestToNode("uptime")),
+        uptime: toDDHHMM(await sendRequestToNode("uptime")),
         connections: {
             in: formatNumber(netInfo.connections_in),
             out: formatNumber(netInfo.connections_out),
