@@ -78,8 +78,8 @@ function toDDHHMM(secs, padding = false) {
     const markers = ["d", "h", "m"]
     const totalHours = Math.floor(secs / 3600)
     const hours = totalHours % 24
-    const minutes = Math.floor(secs / 60) % 60
     const days = Math.floor(totalHours / 24)
+    const minutes = days > 99 ? 0 : Math.floor(secs / 60) % 60
 
     return [days, hours, minutes]
         .map(v => {
@@ -88,10 +88,9 @@ function toDDHHMM(secs, padding = false) {
             }
             return v
         }) // first add padding, if wanted ([2, 0, 13] -> ["02", "00", "13"])
-
         .map((v, i) => `${v}${markers[i]}`) // add time markers ([2, 0, 13] -> ["2d", "0h", "13m"])
-        .filter((v) => padding ? !v.startsWith("00") : !v.startsWith("0")) // then filter out 0 values (["2d", "0h", "13m"] -> ["02d", "13m"])
-        .join("") // and finally join ("02d")
+        .filter((v) => padding ? !v.startsWith("00") : !v.startsWith("0")) // then filter out 0 values (["2d", "0h", "13m"] -> ["2d", "13m"])
+        .join("") // and finally join ("2d13m")
 }
 // https://stackoverflow.com/a/18650828, slightly tweaked
 function formatBytes(bytes) {
