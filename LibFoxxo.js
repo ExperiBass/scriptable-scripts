@@ -278,24 +278,6 @@ module.exports = {
         return (+now - +date) / msInDay
     },
     // https://stackoverflow.com/a/34841026, heavily tweaked
-    toDDHHMM(secs, padding = false) {
-        const markers = ["d", "h", "m"]
-        const totalHours = Math.floor(secs / 3600)
-        const hours = totalHours % 24
-        const days = Math.floor(totalHours / 24)
-        const minutes = days > 99 ? 0 : Math.floor(secs / 60) % 60
-
-        return [days, hours, minutes]
-            .map(v => {
-                if (padding) {
-                    return v > 9 ? v : "0" + v
-                }
-                return v
-            }) // first add padding, if wanted ([2, 0, 13] -> ["02", "00", "13"])
-            .map((v, i) => `${v}${markers[i]}`) // add time markers ([2, 0, 13] -> ["2d", "0h", "13m"])
-            .filter((v) => padding ? !v.startsWith("00") : !v.startsWith("0")) // then filter out 0 values (["2d", "0h", "13m"] -> ["2d", "13m"])
-            .join("") // and finally join ("2d13m")
-    },
     ProgressBar,
     version: 1
 }
