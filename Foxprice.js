@@ -64,84 +64,87 @@ const widget = new ListWidget()
 widget.backgroundImage = await transparent(Script.name())
 
 async function buildWidget() {
-    try {
-        await addCryptoLines()
-    } catch (e) {
-        console.error(e)
+    for (const coin of params) {
+        try {
+            await addCryptoLine(coin)
+        } catch (e) {
+            console.error(e)
+        }
     }
 }
 
-async function addCryptoLines() {
-    const data = await fetchCoinInfo(params)
-    for (const { image, id, symbol, price, grow, growPercent } of data) {
-        const rowStack = createStack({
-            parent: widget, padding: [2, 2, 0, 0],
-            align: 'center', verticalLayout: false
+async function addCryptoLine(name) {
+    const {
+        image,
+        symbol,
+        price,
+        grow,
+        growPercent,
+        id
+    } = await fetchCoinInfo(name)
+
+    const rowStack = createStack({
+        parent: widget, padding: [2, 2, 0, 0],
+        align: 'center', verticalLayout: false
+    })
+
+    if (config.runsInWidget && config.widgetFamily !== "small") {
+        rowStack.url = `https://www.coingecko.com/en/coins/${id}`
+        const imageStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
+        createImage({
+            parent: imageStack,
+            image: await loadImage(image),
+            width: 20, height: 20, align: 'left'
         })
-
-        if (config.runsInWidget && config.widgetFamily !== "small") {
-            rowStack.url = `https://www.coingecko.com/en/coins/${id}`
-            const imageStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
-            createImage({
-                parent: imageStack,
-                image: await loadImage(image),
-                width: 20, height: 20, align: 'left'
-            })
-        }
-        const symbolStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
-        rowStack.addSpacer()
-        const priceStack = createStack({ parent: rowStack, padding: [0, 0, 0, 0] })
+    }
+    const symbolStack = createStack({ parent: rowStack, padding: [0, 0, 0, 5] })
+    rowStack.addSpacer()
+    const priceStack = createStack({ parent: rowStack, padding: [0, 0, 0, 0] })
 
 
-        // The text
-        const symbolText = symbolStack.addText(symbol)
-        symbolText.font = FONT
-        symbolText.leftAlignText()
+    // The text
+    const symbolText = symbolStack.addText(symbol)
+    symbolText.font = FONT
+    symbolText.leftAlignText()
 
-        const priceText = priceStack.addText(price)
-        priceText.font = FONT
-        priceText.rightAlignText()
+    const priceText = priceStack.addText(price)
+    priceText.font = FONT
+    priceText.rightAlignText()
 
-        if (config.runsInWidget && config.widgetFamily === "small") {
-            if (grow) {
-                priceText.textColor = GREEN
-            } else {
-                priceText.textColor = RED
-            }
-        }
-
-        if (config.runsInWidget && config.widgetFamily !== "small") {
-            const percentStack = createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
-            const percentText = percentStack.addText(growPercent)
-            if (grow) {
-                percentText.textColor = GREEN
-                percentText.text = `+${percentText.text}`
-            } else {
-                percentText.textColor = RED
-            }
+    if (config.runsInWidget && config.widgetFamily === "small") {
+        if (grow) {
+            priceText.textColor = GREEN
+        } else {
+            priceText.textColor = RED
         }
     }
+
+    if (config.runsInWidget && config.widgetFamily !== "small") {
+        const percentStack = createStack({ parent: rowStack, padding: [0, 0, 8, 0] })
+        const percentText = percentStack.addText(growPercent)
+        if (grow) {
+            percentText.textColor = GREEN
+            percentText.text = `+${percentText.text}`
+        } else {
+            percentText.textColor = RED
+        }
+    }
+
 }
 
-async function fetchCoinInfo(coinIDs) {
-    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinIDs.join(',')}`
+async function fetchCoinInfo(coinID) {
+    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinID}`
 
     const req = new Request(url)
-    let res = []
-    const apiResult = (await req.loadJSON())
-
-    for (const coin of apiResult) {
-        const info = {
-            price: formatNumber(coin.current_price, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-            grow: (coin.price_change_24h > 0),
-            growPercent: `${coin.price_change_percentage_24h.toFixed(2)}%`, // i dont trust JS around negatives...
-            symbol: coin.symbol.toUpperCase(),
-            image: coin.image,
-            id: coin.id
-        }
-        res.push(info)
+    const apiResult = (await req.loadJSON())[0]
+    return {
+        price: formatNumber(apiResult.current_price, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        grow: (apiResult.price_change_24h > 0),
+        growPercent: `${apiResult.price_change_percentage_24h.toFixed(2)}%`, // i dont trust JS around negatives...
+        symbol: apiResult.symbol.toUpperCase(),
+        image: apiResult.image,
+        id: apiResult.id
     }
-    return res
 }
 
 await buildWidget()
