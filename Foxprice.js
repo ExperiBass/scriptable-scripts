@@ -61,15 +61,9 @@ if (config.runsInApp) {
 }
 
 const widget = new ListWidget()
+const DONT_UPDATE_UNTIL = 10 * 60 * 1000 // 10m
+widget.refreshAfterDate = new Date((new Date()).valueOf() + DONT_UPDATE_UNTIL) // make sure we're not abusing the ratelimit
 widget.backgroundImage = await transparent(Script.name())
-
-async function buildWidget() {
-    try {
-        await addCryptoLines()
-    } catch (e) {
-        console.error(e)
-    }
-}
 
 async function addCryptoLines() {
     const data = await fetchCoinInfo(params)
@@ -125,10 +119,15 @@ async function addCryptoLines() {
 
 async function fetchCoinInfo(coinIDs) {
     const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${coinIDs.join(',')}`
-
     const req = new Request(url)
     let res = []
     const apiResult = (await req.loadJSON())
+    if (apiResult.status && apiResult.status.error_code) {
+        // back off if we have a error
+        const DONT_UPDATE_UNTIL = 30 * 60 * 1000 // 30m
+        widget.refreshAfterDate = new Date((new Date()).valueOf() + DONT_UPDATE_UNTIL)
+        return []
+    }
 
     for (const coin of apiResult) {
         const info = {
@@ -144,8 +143,11 @@ async function fetchCoinInfo(coinIDs) {
     return res
 }
 
-await buildWidget()
-
-Script.setWidget(widget)
-Script.complete()
-widget[`present${PRESENT_SIZE}`]()
+try {
+    await addCryptoLines()
+    Script.setWidget(widget)
+    Script.complete()
+    widget[`present${PRESENT_SIZE}`]()
+} catch (e) {
+    console.error(e)
+}
