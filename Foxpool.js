@@ -96,7 +96,7 @@ const diffSymbol = getSymbol('hammer.fill')
 // Prebuild requests
 const mempoolInfo = new Request(`${API_URL}/mempool/summary`)
 const feeSuggestions = new Request(`${API_URL}/mempool/fees`)
-const blockHeight = new Request(`${API_URL}/blocks/tip/height`)
+const blockHeight = new Request(`${API_URL}/blocks/tip`)
 const hashrate = new Request(`${API_URL}/mining/hashrate`) // hashrate and diff
 
 
@@ -223,14 +223,14 @@ const heightImage = createImage({
 })
 heightImageStack.addSpacer()
 
-const currHeight = (await blockHeight.loadString())
+const currHeight = (await blockHeight.loadJSON())
 const heightTextStack = createStack({
     parent: hashrateStack, width: hashrateStack.size.width, align: 'center'
 })
 heightTextStack.addSpacer()
 createText({
     parent: heightTextStack,
-    content: currHeight,
+    content: `${currHeight.height}`,
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
