@@ -65,7 +65,7 @@ const DONT_UPDATE_UNTIL = 10 * 60 * 1000 // 10m
 widget.refreshAfterDate = new Date((new Date()).valueOf() + DONT_UPDATE_UNTIL) // make sure we're not abusing the ratelimit
 widget.backgroundImage = await transparent(Script.name())
 
-async function addCryptoLines() {
+async function draw() {
     const data = await fetchCoinInfo(params)
     for (const { image, id, symbol, price, grow, growPercent } of data) {
         const rowStack = createStack({
@@ -144,7 +144,7 @@ async function fetchCoinInfo(coinIDs) {
 }
 
 try {
-    await addCryptoLines()
+    await draw()
     Script.setWidget(widget)
     Script.complete()
     widget[`present${PRESENT_SIZE}`]()
