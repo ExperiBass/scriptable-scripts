@@ -297,7 +297,7 @@ const suggestedFeeTextStack = createStack({
 suggestedFeeTextStack.addSpacer()
 createText({
     parent: suggestedFeeTextStack,
-    content: `${suggestedFeeData["60min"]} sat/vB ${suggestedFeeData["30min"]} sat/vB ${suggestedFeeData["nextBlock"]} sat/vB`,
+    content: `${suggestedFeeData["1day"]} sat/vB ${suggestedFeeData["60min"]} sat/vB ${suggestedFeeData["30min"]} sat/vB`,
     minimumScaleFactor: MIN_TEXT_SCALE,
     font: widgetConf.font.small
 })
