@@ -8,7 +8,7 @@
  * Name: LibFoxxo
  * Year: 2022
  * Donate: bc1qd65n4y562q6vdp5lx7953uqj0hqxn9k8rqx08y
-*/
+ */
 const SRC_URL = 'https://github.com/ExperiBass/scriptable-scripts/raw/master/LibFoxxo.js'
 const UPDATE_PERIOD = 7 // days
 
@@ -20,21 +20,21 @@ class ProgressBar {
     constructor({
         width = 100,
         height = 20,
-        fillColor = "#7814CF",
-        backgroundColor = "#00ffff",
+        fillColor = '#7814CF',
+        backgroundColor = '#00ffff',
         cornerRadius = 10,
         respectScreenScale = true,
         progressPercentage = 0,
         progressSteps = 100, // Progress precision
         transparent = true, // background
         vertical = false,
-        startFromTop = false
+        startFromTop = false,
     }) {
         this.#ctx.opaque = !transparent
         this.#ctx.size = new Size(width, height)
         this.#ctx.respectScreenScale = respectScreenScale
 
-        let progressStepLength;
+        let progressStepLength
         if (vertical) {
             progressStepLength = (this.#ctx.size.height / progressSteps).toFixed(3)
         } else {
@@ -51,9 +51,9 @@ class ProgressBar {
 
         // draw the progressbar
         // determine the number of pixels needed
-        const progressLength = (progressStepLength * progressPercentage)
+        const progressLength = progressStepLength * progressPercentage
         const progressPath = new Path()
-        let progressRect;
+        let progressRect
         if (vertical) {
             let offset = 0
             if (startFromTop) {
@@ -75,7 +75,6 @@ class ProgressBar {
         return this.#ctx
     }
 }
-
 
 module.exports = {
     /**
@@ -179,12 +178,12 @@ module.exports = {
         width = 0, // px
         height = 0, // px
         backgroundColor = null, // hexadecimal notation
-        borderColor = "#000000",
+        borderColor = '#000000',
         borderRadius = 4, // px
         borderWidth = 0, // px
         verticalLayout = false,
         padding = [0, 0, 0, 0], // array of 4 numbers
-        align = 'top' // 'top', 'center', 'bottom'
+        align = 'top', // 'top', 'center', 'bottom'
     }) {
         try {
             if (!parent) {
@@ -220,7 +219,7 @@ module.exports = {
         height = 0,
         resizable = true,
         color = null,
-        align = 'left' // 'left', 'center', 'right'
+        align = 'left', // 'left', 'center', 'right'
     }) {
         try {
             if (!parent) {
@@ -240,21 +239,21 @@ module.exports = {
     },
     createText({
         parent = null,
-        content = "",
+        content = '',
         font = null,
         maxLines = 0,
         minimumScaleFactor = 1,
         url = null,
         centered = false,
-        align = 'left' // 'left', 'center', 'right'
+        align = 'left', // 'left', 'center', 'right'
     }) {
         try {
             if (!parent) {
                 throw Error('parent not defined')
             }
-            centered ? parent.addSpacer() : ""
+            centered ? parent.addSpacer() : ''
             const txt = parent.addText(content)
-            centered ? parent.addSpacer() : ""
+            centered ? parent.addSpacer() : ''
             txt.lineLimit = maxLines
             if (font) {
                 txt.font = font
@@ -279,24 +278,24 @@ module.exports = {
     },
     // https://stackoverflow.com/a/34841026, heavily tweaked
     toDDHHMM(secs, padding = false) {
-        const markers = ["d", "h", "m"]
+        const markers = ['d', 'h', 'm']
         const totalHours = Math.floor(secs / 3600)
         const hours = totalHours % 24
         const days = Math.floor(totalHours / 24)
         const minutes = days > 99 ? 0 : Math.floor(secs / 60) % 60
 
         return [days, hours, minutes]
-            .map(v => {
+            .map((v) => {
                 if (padding) {
-                    return v > 9 ? v : "0" + v
+                    return v > 9 ? v : '0' + v
                 }
                 return v
             }) // first add padding, if wanted ([2, 0, 13] -> ["02", "00", "13"])
             .map((v, i) => `${v}${markers[i]}`) // add time markers ([2, 0, 13] -> ["2d", "0h", "13m"])
-            .filter((v) => padding ? !v.startsWith("00") : !v.startsWith("0")) // then filter out 0 values (["2d", "0h", "13m"] -> ["2d", "13m"])
-            .join("") // and finally join ("2d13m")
+            .filter((v) => (padding ? !v.startsWith('00') : !v.startsWith('0'))) // then filter out 0 values (["2d", "0h", "13m"] -> ["2d", "13m"])
+            .join('') // and finally join ("2d13m")
     },
     ProgressBar,
-    version: 1
+    version: 1,
 }
 Script.complete()

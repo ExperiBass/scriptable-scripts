@@ -41,7 +41,7 @@ const {
 const { transparent } = importModule('no-background')
 const FONT = Font.mediumSystemFont(16)
 
-const params = args.widgetParameter ? args.widgetParameter.split(',') : ['bitcoin', 'ethereum']
+const params = args.widgetParameter?.split(',') ?? ['bitcoin', 'ethereum']
 
 // Select file source
 const files = isIniCloud(FileManager.local(), module.filename) ? FileManager.iCloud() : FileManager.local()

@@ -20,7 +20,7 @@ const {
 } = importModule('LibFoxxo')
 const { transparent } = importModule('no-background')
 
-const params = args.widgetParameter ? args.widgetParameter.split(',') : []
+const params = args.widgetParameter?.split(',') ?? []
 const RPC_URL = params[0] // http://url:8334
 const RPC_AUTH = params[1] // user:pass
 const NODE_NAME_REGEX = /\((.+)\)/i
